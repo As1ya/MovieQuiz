@@ -14,20 +14,20 @@ final class MovieQuizViewController: UIViewController {
     private var correctAnswersCount: Int = 0
     
     // MARK: - Models
-    struct QuizStepViewModel {
+    private struct QuizStepViewModel {
         let image: UIImage
         let rating: Double
         let question: String
         let questionNumber: String
     }
-    struct QuizQuestion {
+    private struct QuizQuestion {
         let image: String
         let rating: Double
         let text: String
         let correctAnswer: Bool
     }
     
-    struct QuizResultsViewModel {
+    private struct QuizResultsViewModel {
         let title: String
         let text: String
         let buttonText: String
@@ -145,7 +145,7 @@ final class MovieQuizViewController: UIViewController {
         
         alert.addAction(action)
         
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
     private func showAnswerResult(isCorrect: Bool) {
