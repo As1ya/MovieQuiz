@@ -4,8 +4,9 @@
 //
 //  Created by Анастасия Федотова on 18.01.2026.
 //
+import Foundation
 
-class QuestionFactory: QuestionFactoryProtocol {
+final class QuestionFactory: QuestionFactoryProtocol {
     weak var delegate: QuestionFactoryDelegate?
     
     private let questions: [QuizQuestion] = [
@@ -56,7 +57,7 @@ class QuestionFactory: QuestionFactoryProtocol {
             delegate?.didReceiveNextQuestion(question: nil)
             return
         }
-
+        
         let question = questions[safe: index]
         delegate?.didReceiveNextQuestion(question: question)
     }

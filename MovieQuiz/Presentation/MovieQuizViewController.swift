@@ -15,11 +15,16 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
+    private var alertPresenter: AlertPresenterProtocol?
+    private var statisticService: StatisticServiceProtocol!
+    private var isInteractionLocked = false
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        statisticService = StatisticService()
+        
         yesButton.layer.cornerRadius = 15
         noButton.layer.cornerRadius = 15
         imageView.layer.cornerRadius = 20
@@ -29,29 +34,32 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         self.questionFactory = factory
 
         questionFactory?.requestNextQuestion()
+        
+        alertPresenter = AlertPresenter(viewController: self)
     }
     
     // MARK: - QuestionFactoryDelegate
-
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else {
-                return
-            }
+            return
+        }
 
-            currentQuestion = question
-            let viewModel = convert(model: question)
+        currentQuestion = question
+        let viewModel = convert(model: question)
         
         DispatchQueue.main.async { [weak self] in
-                self?.show(quiz: viewModel)
-            }
+            self?.show(quiz: viewModel)
+        }
     }
     
     // MARK: - Actions
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
+        guard !isInteractionLocked else { return }
         handleAnswerResult(givenAnswer: true)
     }
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
+        guard !isInteractionLocked else { return }
         handleAnswerResult(givenAnswer: false)
     }
     
@@ -60,6 +68,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         guard let currentQuestion = currentQuestion else {
             return
         }
+        
+        setButtonsEnabled(false)
+        isInteractionLocked = true
+        
         let isCorrect = currentQuestion.correctAnswer == givenAnswer
         
         if isCorrect {
@@ -86,22 +98,32 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func show(quiz result: QuizResultsViewModel) {
-        let alert = UIAlertController(
+        let bestGame = statisticService.bestGame
+        
+        let message = """
+        Ваш результат: \(correctAnswersCount)/\(questionsAmount)
+        Количество сыгранных игр: \(statisticService.gamesCount)
+        Рекорд: \(bestGame.correct)/\(bestGame.total)
+        Дата рекорда: \(bestGame.date.dateTimeString)
+        Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
+        """
+        
+        let alertModel = AlertModel(
             title: result.title,
-            message: result.text,
-            preferredStyle: .alert)
+            message: message,
+            buttonText: result.buttonText,
+            onTap: { [weak self] in
+                guard let self = self else { return }
+                self.currentQuestionIndex = 0
+                self.correctAnswersCount = 0
+                self.imageView.layer.borderWidth = 0
+                self.setButtonsEnabled(true)
+                self.isInteractionLocked = false
+                self.questionFactory?.requestNextQuestion()
+            }
+        )
         
-        let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            self.currentQuestionIndex = 0
-            self.correctAnswersCount = 0
-            self.imageView.layer.borderWidth = 0
-            
-            self.questionFactory?.requestNextQuestion()
-        }
-        
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
+        alertPresenter?.presentAlert(model: alertModel)
     }
     
     private func showAnswerResult(isCorrect: Bool) {
@@ -116,19 +138,27 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showNextQuestionOrResults() {
-        if currentQuestionIndex == questionsAmount - 1 {
-            let text = correctAnswersCount == questionsAmount ?
-                    "Поздравляем, вы ответили на 10 из 10!" :
-                    "Вы ответили на \(correctAnswersCount) из 10, попробуйте ещё раз!"
+        if currentQuestionIndex >= questionsAmount {
+            statisticService.store(correct: correctAnswersCount, total: questionsAmount)
+            
             let viewModel = QuizResultsViewModel(
                 title: "Этот раунд окончен!",
-                text: text,
-                buttonText: "Сыграть ещё раз")
+                text: "",
+                buttonText: "Сыграть ещё раз"
+            )
             show(quiz: viewModel)
-            
         } else {
             imageView.layer.borderWidth = 0
+            setButtonsEnabled(true)
+            isInteractionLocked = false
             questionFactory?.requestNextQuestion()
         }
+    }
+    
+    private func setButtonsEnabled(_ enabled: Bool) {
+        yesButton.isEnabled = enabled
+        noButton.isEnabled = enabled
+        yesButton.alpha = enabled ? 1.0 : 0.6
+        noButton.alpha = enabled ? 1.0 : 0.6
     }
 }
