@@ -12,6 +12,6 @@ struct GameResult  {
     let date: Date
     
     func isBetterThan(_ other: GameResult) -> Bool {
-        return (correct > other.correct) || ((correct == other.correct) && (date > other.date))
+        (correct > other.correct) || ((correct == other.correct) && (date > other.date))
     }
 }
