@@ -4,7 +4,6 @@
 //
 //  Created by Анастасия Федотова on 17.02.2026.
 //
-
 import Foundation
 
 protocol MovieQuizViewControllerProtocol: AnyObject {
