@@ -90,5 +90,12 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         
         alertPresenter?.presentAlert(model: alertModel)
     }
+    
+    func changeStateButton(isEnabled: Bool) {
+        yesButton.isEnabled = isEnabled
+        noButton.isEnabled = isEnabled
+        yesButton.alpha = isEnabled ? 1.0 : 0.6
+        noButton.alpha = isEnabled ? 1.0 : 0.6
+    }
 }
 

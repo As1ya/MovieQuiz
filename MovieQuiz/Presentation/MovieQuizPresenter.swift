@@ -45,6 +45,8 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
+            self?.viewController?.hideLoadingIndicator()
+            self?.viewController?.changeStateButton(isEnabled: true)
             self?.viewController?.show(quiz: viewModel)
         }
     }
@@ -56,6 +58,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     func restartGame() {
         currentQuestionIndex = 0
         correctAnswersCount = 0
+        viewController?.showLoadingIndicator()
         questionFactory?.requestNextQuestion()
     }
     
@@ -93,6 +96,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         didAnswer(isCorrect: isCorrect)
         
         viewController?.highlightImageBorder(isCorrect: isCorrect)
+        viewController?.changeStateButton(isEnabled: false)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else { return }
@@ -119,6 +123,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
                 viewController?.show(quiz: viewModel)
         } else {
             self.switchToNextQuestion()
+            viewController?.showLoadingIndicator()
             questionFactory?.requestNextQuestion()
         }
     }

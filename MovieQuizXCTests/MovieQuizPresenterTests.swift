@@ -33,6 +33,10 @@ final class MovieQuizViewControllerMock: MovieQuizViewControllerProtocol {
     func showNetworkError(message: String) {
     
     }
+    
+    func changeStateButton(isEnabled: Bool) {
+    
+    }
 }
 
 final class MovieQuizPresenterTests: XCTestCase {
@@ -50,3 +54,4 @@ final class MovieQuizPresenterTests: XCTestCase {
         XCTAssertEqual(viewModel.questionNumber, "1/10")
     }
 }
+

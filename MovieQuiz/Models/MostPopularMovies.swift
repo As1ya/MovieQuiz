@@ -6,15 +6,27 @@
 //
 import Foundation
 
+// MARK: - MostPopularMovies
+
 struct MostPopularMovies: Codable {
+    
+    // MARK: - Public Properties
+    
     let errorMessage: String
     let items: [MostPopularMovie]
 }
 
+// MARK: - MostPopularMovie
+
 struct MostPopularMovie: Codable {
+    
+    // MARK: - Public Properties
+    
     let title: String
     let rating: String
     let imageURL: URL
+    
+    // MARK: - Computed Properties
     
     var resizedImageURL: URL {
             let urlString = imageURL.absoluteString
@@ -27,6 +39,7 @@ struct MostPopularMovie: Codable {
             return newURL
         }
         
+    // MARK: - Coding Keys
     
     private enum CodingKeys: String, CodingKey {
     case title = "fullTitle"
