@@ -39,6 +39,7 @@
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="252" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="1/10" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OED-Yu-MyY" userLabel="Index Label">
                                                 <rect key="frame" x="338" y="0.0" width="36" height="23.5"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="Index"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
                                                 <color key="textColor" name="YP White"/>
                                                 <nil key="highlightedColor"/>
@@ -48,6 +49,7 @@
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="WRs-FX-eSB" userLabel="Preview Image">
                                         <rect key="frame" x="0.0" y="43.5" width="374" height="561"/>
                                         <color key="backgroundColor" name="YP White"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="Poster"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="WRs-FX-eSB" secondAttribute="height" multiplier="2:3" id="jvp-Yp-TuF"/>
                                         </constraints>
@@ -64,6 +66,7 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ePB-gn-yBj" userLabel="No button">
                                                 <rect key="frame" x="0.0" y="0.0" width="177" height="60"/>
                                                 <color key="backgroundColor" name="YP White"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="No"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="60" id="ftc-aj-Mky"/>
                                                 </constraints>
@@ -85,6 +88,7 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kvO-fB-Toe" userLabel="Yes button">
                                                 <rect key="frame" x="197" y="0.0" width="177" height="60"/>
                                                 <color key="backgroundColor" name="YP White"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="Yes"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="60" id="jBw-OI-in0"/>
                                                 </constraints>

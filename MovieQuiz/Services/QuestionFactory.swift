@@ -7,10 +7,10 @@
 import Foundation
 
 final class QuestionFactory: QuestionFactoryProtocol {
-    private let moviesLoader: MoviesLoading
+    private let moviesLoader: MoviesLoaderProtocol
     private weak var delegate: QuestionFactoryDelegate?
     
-    init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate?) {
+    init(moviesLoader: MoviesLoaderProtocol, delegate: QuestionFactoryDelegate?) {
             self.moviesLoader = moviesLoader
             self.delegate = delegate
         }
@@ -88,14 +88,23 @@ final class QuestionFactory: QuestionFactoryProtocol {
                 do {
                     imageData = try Data(contentsOf: movie.resizedImageURL)
                 } catch {
-                    print("Failed to load image")
+                    print("Failed to load image: \(error)")
+                    DispatchQueue.main.async { [weak self] in
+                        self?.delegate?.didFailToLoadData(with: error)
+                    }
+                    return
                 }
                 
                 let rating = Float(movie.rating) ?? 0
                 
-                let threshold = Int.random(in: 3...9)
-                let text = "Рейтинг этого фильма больше чем \(threshold)?"
-                let correctAnswer = rating > Float(threshold)
+                let textRating = "\(Int.random(in: 7...9)).\(Int.random(in: 0...9))"
+                let threshold = Float(textRating) ?? 0
+                
+                let isGreater = Bool.random()
+                let operatorText = isGreater ? "больше" : "меньше"
+                
+                let text = "Рейтинг этого фильма \(operatorText) чем \(textRating)?"
+                let correctAnswer = isGreater ? rating > threshold : rating < threshold
                 
                 let question = QuizQuestion(image: imageData,
                                             text: text,
